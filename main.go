@@ -8,6 +8,7 @@ import (
 	"strings"
 )
 
+//DateScrape returns the quote on a specified date
 //Date should be written in mmm-dd-yyyy format with month being a 3 lettered abbreviation and 1st letter capital
 //Date shouldn't preced more than a week from present date
 func DateScrape(w http.ResponseWriter, r *http.Request) {
@@ -40,6 +41,7 @@ func DateScrape(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+//TodayScrape returns the quote of the day
 func TodayScrape(w http.ResponseWriter, _ *http.Request) {
 	// Request the HTML page.
 	res, err := http.Get("http://eduro.com")
