@@ -3,7 +3,6 @@ MAINTAINER sourav241196@gmail.com
 WORKDIR /app
 ENV GO111MODULE=on
 COPY ./ .
-RUN ls
 RUN go mod tidy
 RUN go mod download
 RUN go mod verify
