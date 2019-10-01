@@ -2,12 +2,11 @@ FROM golang
 MAINTAINER sourav241196@gmail.com
 WORKDIR /app
 ENV GO111MODULE=on
-COPY . .
+COPY ./ .
+RUN ls
 RUN go mod tidy
 RUN go mod download
 RUN go mod verify
-COPY ./ .
-RUN ls
 RUN CGO_ENABLED=0 go build -v -o ./bin/app .
 EXPOSE 3000
 
