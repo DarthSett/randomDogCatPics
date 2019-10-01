@@ -17,7 +17,7 @@ jobs:
       - checkout
       - run: curl https://cli-assets.heroku.com/install.sh | sh
       - run: docker login --username=sourav@hotcocoasoftware.com --password=$HEROKU_API_KEY registry.heroku.com
-      - run: heroku container:push web
+      - run: heroku container:push web --app tranquil-river-67331
       - run: heroku container:release web
 workflows:
   version: 2
