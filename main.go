@@ -13,6 +13,7 @@ import (
 //Date shouldn't preced more than a week from present date
 func DateScrape(w http.ResponseWriter, r *http.Request) {
 	// Request the HTML page.
+	//time.Sleep(10 * time.Second)
 	res, err := http.Get("http://eduro.com")
 	if err != nil {
 		log.Fatal(err)
@@ -32,13 +33,14 @@ func DateScrape(w http.ResponseWriter, r *http.Request) {
 	quote := ""
 	// Find quote of the day
 	doc.Find(".singlemeta").Each(func(i int, s *goquery.Selection) {
-		if date[0] == s.Find(".months").Text() && date[1] == s.Find(".dates").Text() && date[2] == s.Find(".years").Text() {
+		if (date[0] == s.Find(".months").Text() || strings.Title(strings.ToLower(date[0])) == s.Find(".months").Text()) && date[1] == s.Find(".dates").Text() && date[2] == s.Find(".years").Text() {
 			// get the quote
 			quote = s.Find("p").Text()
 			w.Write([]byte(quote))
 			return
 		}
 	})
+
 }
 
 //TodayScrape returns the quote of the day
