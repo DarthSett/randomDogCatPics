@@ -7,6 +7,7 @@ RUN go mod tidy
 RUN go mod download
 RUN go mod verify
 COPY ./ .
+RUN ls
 RUN CGO_ENABLED=0 go build -v -o ./bin/app .
 EXPOSE 3000
 
