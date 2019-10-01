@@ -1,0 +1,27 @@
+version : 2
+jobs:
+  build:
+    docker:
+      - image: circleci/golang:1.12
+        environment:
+          -GO111MODULE: "ON"
+    working_directory: ~/go/src/github.com/casualScraper
+    steps:
+      - checkout
+      - run: go mod verify
+      - run: go test ./ScraperService/Scraper
+
+  deploy:
+    machine: true
+    steps:
+      - checkout
+      - run: curl https://cli-assets.heroku.com/install.sh | sh
+      - run: docker login --username=sourav@hotcocoasoftware.com --password=$HEROKU_API_KEY registry.heroku.com
+      - run: heroku container:push web
+      - run: heroku container:release web
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - build
+      - deploy
