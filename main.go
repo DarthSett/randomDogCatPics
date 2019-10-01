@@ -5,7 +5,6 @@ import (
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
-	"os"
 	"strings"
 )
 
@@ -77,5 +76,5 @@ func main() {
 	router.HandleFunc("/{date}", DateScrape)
 	router.HandleFunc("/", TodayScrape)
 
-	log.Fatal(http.ListenAndServe(":" + os.Getenv("PORT"), router))
+	log.Fatal(http.ListenAndServe(":3000", router))
 }
