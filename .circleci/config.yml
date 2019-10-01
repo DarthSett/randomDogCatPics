@@ -9,7 +9,6 @@ jobs:
     steps:
       - checkout
       - run: go mod verify
-      - run: go test ./ScraperService/Scraper
 
   deploy:
     machine: true
