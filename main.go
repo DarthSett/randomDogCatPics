@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 )
@@ -120,5 +121,5 @@ func main() {
 	router.HandleFunc("/", TodayScrape)
 	router.HandleFunc("/cat", Cat)
 
-	log.Fatal(http.ListenAndServe(":3000", router))
+	log.Fatal(http.ListenAndServe(":"+ os.Getenv("PORT"), router))
 }
