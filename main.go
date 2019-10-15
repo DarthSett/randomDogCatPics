@@ -49,6 +49,43 @@ func DateScrape(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func Dog(w http.ResponseWriter, r *http.Request) {
+	println(1)
+	res, err := http.Get("https://api.thedogapi.com/v1/images/search")
+	if err != nil {
+		log.Fatalf("err: %v", err)
+	}
+	if res.StatusCode != 200 {
+		log.Fatalf("Status code error: %v", res.StatusCode)
+	}
+	var i []map[string]interface{}
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		log.Fatalf("err: ", err)
+	}
+	err = json.Unmarshal(body, &i)
+	if err != nil {
+		log.Fatalf("err: ", err)
+	}
+	url := fmt.Sprint(i[0]["url"])
+	res.Body.Close()
+	println(2, ": Url:", url)
+	res, err = http.Get(url)
+	if err != nil {
+		log.Fatalf("err: ", err)
+	}
+	println("3: ContentLength: ", fmt.Sprint(res.ContentLength))
+	w.Header().Set("Content-Length", fmt.Sprint(res.ContentLength))
+	w.Header().Set("Content-Type", res.Header.Get("Content-Type"))
+	println("4: ContentType: ", res.Header.Get("Content-Type"))
+	_, err = io.Copy(w, res.Body)
+	if err != nil {
+		log.Fatalf("err: ", err)
+	}
+	res.Body.Close()
+	return
+}
+
 func Cat(w http.ResponseWriter, r *http.Request) {
 	println(1)
 	res, err := http.Get("https://api.thecatapi.com/v1/images/search")
@@ -120,6 +157,7 @@ func main() {
 	router.HandleFunc("/date/{date}", DateScrape)
 	router.HandleFunc("/", TodayScrape)
 	router.HandleFunc("/cat", Cat)
+	router.HandleFunc("/dog", Dog)
 
 	log.Fatal(http.ListenAndServe(":"+ os.Getenv("PORT"), router))
 }
