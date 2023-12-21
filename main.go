@@ -3,51 +3,47 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/PuerkitoBio/goquery"
 	"github.com/gorilla/mux"
 	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
-	"strings"
-	"time"
 )
 
 //DateScrape returns the quote on a specified date
 //Date should be written in mmm-dd-yyyy format with month being a 3 lettered abbreviation and 1st letter capital
 //Date shouldn't preced more than a week from present date
-func DateScrape(w http.ResponseWriter, r *http.Request) {
-	// Request the HTML page.
-	time.Sleep(10 * time.Second)
-	res, err := http.Get("http://eduro.com")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer res.Body.Close()
-	if res.StatusCode != 200 {
-		log.Fatalf("status code error: %d %s", res.StatusCode, res.Status)
-	}
+// func DateScrape(w http.ResponseWriter, r *http.Request) {
+// 	// Request the HTML page.
+// 	time.Sleep(10 * time.Second)
+// 	res, err := http.Get("http://eduro.com")
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	defer res.Body.Close()
+// 	if res.StatusCode != 200 {
+// 		log.Fatalf("status code error: %d %s", res.StatusCode, res.Status)
+// 	}
 
-	// Load the HTML document
-	doc, err := goquery.NewDocumentFromReader(res.Body)
-	if err != nil {
-		log.Fatal(err)
-	}
-	vars := mux.Vars(r)
-	date := strings.Split(vars["date"], "-")
-	quote := ""
-	// Find quote of the day
-	doc.Find(".singlemeta").Each(func(i int, s *goquery.Selection) {
-		if (date[0] == s.Find(".months").Text() || strings.Title(strings.ToLower(date[0])) == s.Find(".months").Text()) && date[1] == s.Find(".dates").Text() && date[2] == s.Find(".years").Text() {
-			// get the quote
-			quote = s.Find("p").Text()
-			w.Write([]byte(quote))
-			return
-		}
-	})
+// 	// Load the HTML document
+// 	doc, err := goquery.NewDocumentFromReader(res.Body)
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	vars := mux.Vars(r)
+// 	date := strings.Split(vars["date"], "-")
+// 	quote := ""
+// 	// Find quote of the day
+// 	doc.Find(".singlemeta").Each(func(i int, s *goquery.Selection) {
+// 		if (date[0] == s.Find(".months").Text() || strings.Title(strings.ToLower(date[0])) == s.Find(".months").Text()) && date[1] == s.Find(".dates").Text() && date[2] == s.Find(".years").Text() {
+// 			// get the quote
+// 			quote = s.Find("p").Text()
+// 			w.Write([]byte(quote))
+// 			return
+// 		}
+// 	})
 
-}
+// }
 
 func Dog(w http.ResponseWriter, r *http.Request) {
 	println(1)
@@ -124,40 +120,40 @@ func Cat(w http.ResponseWriter, r *http.Request) {
 }
 
 //TodayScrape returns the quote of the day
-func TodayScrape(w http.ResponseWriter, _ *http.Request) {
-	// Request the HTML page.
-	println(1)
-	res, err := http.Get("http://eduro.com")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer res.Body.Close()
-	if res.StatusCode != 200 {
-		log.Fatalf("status code error: %d %s", res.StatusCode, res.Status)
-	}
+// func TodayScrape(w http.ResponseWriter, _ *http.Request) {
+// 	// Request the HTML page.
+// 	println(1)
+// 	res, err := http.Get("http://eduro.com")
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	defer res.Body.Close()
+// 	if res.StatusCode != 200 {
+// 		log.Fatalf("status code error: %d %s", res.StatusCode, res.Status)
+// 	}
 
-	// Load the HTML document
-	doc, err := goquery.NewDocumentFromReader(res.Body)
-	if err != nil {
-		log.Fatal(err)
-	}
-	quote := ""
-	//find quote of the day
-	doc.Find(".singlemeta").Each(func(i int, s *goquery.Selection) {
-		if i < 1 {
-			// get the quote
-			quote = s.Find("p").Text()
-			w.Write([]byte(quote))
-		}
-	})
-}
+// 	// Load the HTML document
+// 	doc, err := goquery.NewDocumentFromReader(res.Body)
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	quote := ""
+// 	//find quote of the day
+// 	doc.Find(".singlemeta").Each(func(i int, s *goquery.Selection) {
+// 		if i < 1 {
+// 			// get the quote
+// 			quote = s.Find("p").Text()
+// 			w.Write([]byte(quote))
+// 		}
+// 	})
+// }
 
 func main() {
 	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/date/{date}", DateScrape)
-	router.HandleFunc("/", TodayScrape)
+	// router.HandleFunc("/date/{date}", DateScrape)
+	// router.HandleFunc("/", TodayScrape)
 	router.HandleFunc("/cat", Cat)
 	router.HandleFunc("/dog", Dog)
 
-	log.Fatal(http.ListenAndServe(":"+ os.Getenv("PORT"), router))
+	log.Fatal(http.ListenAndServe(":8000", router))
 }
